@@ -282,7 +282,7 @@ main() {
     envsubst < $SCRIPT_DIR/app/src/Setting.js-template > $SCRIPT_DIR/app/src/Setting.js
     envsubst < $SCRIPT_DIR/app/backend/server.js-template > $SCRIPT_DIR/app/backend/server.js
 
-    #docker-compose -f $SCRIPT_DIR/docker-compose.yml -p $APP_NAME build --no-cache backend frontend
+    docker-compose -f $SCRIPT_DIR/docker-compose.yml -p $APP_NAME build --no-cache backend frontend
     docker-compose -f $SCRIPT_DIR/docker-compose.yml -p $APP_NAME up -d backend frontend
 
     # ------------------------------------------------------------------
