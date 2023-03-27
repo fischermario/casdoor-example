@@ -1,0 +1,17 @@
+FROM node:16-alpine
+
+RUN mkdir -p /usr/src/app/backend
+
+WORKDIR /usr/src/app
+
+COPY package.json /usr/src/app/
+COPY yarn.lock /usr/src/app/
+COPY backend/server.js /usr/src/app/backend/
+
+RUN yarn install
+
+ENV NODE_ENV=development
+
+EXPOSE 3000
+
+CMD ["node", "backend/server.js"]

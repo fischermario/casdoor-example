@@ -1,0 +1,7 @@
+export const config = {
+  serverUrl: "${CASDOOR_URL}",
+  clientId: "${_CASDOOR_CLIENT_ID}",
+  appName: "app-test",
+  organizationName: "org-test",
+  redirectPath: "${APP_CALLBACK_PATH}", // in accordance with casdoor configuration
+};

@@ -1,0 +1,74 @@
+version: '3.9'
+
+networks:
+  casdoor-net:
+
+services:
+  db:
+    image: mariadb:10.5-focal
+    restart: always
+    ports:
+      - ${DB_PORT_EXT}:3306
+    networks:
+      - casdoor-net
+    env_file:
+      - .env
+    healthcheck:
+      test: out=$$(mysqladmin ping -h localhost -P 3306 -u root --password=$$MYSQL_ROOT_PASSWORD 2>&1); echo $$out | grep 'mysqld is alive' || { echo $$out; exit 1; }
+      interval: 5s
+      timeout: 30s
+      retries: 10
+
+  casdoor:
+    image: casbin/casdoor:${CASDOOR_VERSION}
+    #entrypoint: "/server"
+    restart: always
+    ports:
+      - ${CASDOOR_PORT}:8000
+    networks:
+      - casdoor-net
+    volumes:
+      - ./conf/casdoor.conf:/conf/app.conf
+      - ./conf/init_data.json:/init_data.json
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+      - db
+    extra_hosts:
+      - "${APP_DOMAIN}:${DOCKER_BRIDGE_IP}"
+
+  backend:
+    image: "${APP_NAME}-backend:latest"
+    build:
+      context: app
+      dockerfile: Dockerfile.backend
+    restart: always
+    ports:
+      - ${APP_BACKEND_PORT}:3000
+    networks:
+      - casdoor-net
+    extra_hosts:
+      - "${APP_DOMAIN}:${DOCKER_BRIDGE_IP}"
+
+  frontend:
+    image: "${APP_NAME}-frontend:latest"
+    build:
+      context: app
+      dockerfile: Dockerfile.frontend
+    restart: always
+    ports:
+      - ${APP_PORT}:9000
+    networks:
+      - casdoor-net
+    extra_hosts:
+      - "${APP_DOMAIN}:${DOCKER_BRIDGE_IP}"
+
+  keycloak:
+    image: jboss/keycloak:${KEYCLOAK_VERSION}
+    restart: always
+    ports:
+      - ${KEYCLOAK_PORT}:8080
+    # Keycloak container is not inside the 'casdoor-example' network on purpose!
+    extra_hosts:
+      - "${APP_DOMAIN}:${DOCKER_BRIDGE_IP}"

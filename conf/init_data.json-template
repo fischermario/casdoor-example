@@ -1,0 +1,98 @@
+{
+  "organizations": [
+    {
+      "owner": "admin",
+      "name": "org-test",
+      "displayName": "Test-Org",
+      "passwordType": "bcrypt",
+      "passwordSalt": "uSqaH8qMDMd7HdQz",
+      "defaultApplication": "",
+      "isProfilePublic": true
+    }
+  ],
+  "applications": [
+    {
+      "owner": "admin",
+      "name": "app-test",
+      "displayName": "Test-App",
+      "organization": "org-test",
+      "cert": "cert-test",
+      "enablePassword": true,
+      "enableSignUp": false,
+      "providers": [
+        {
+          "name": "provider-keycloak-saml",
+          "canSignUp": false,
+          "canSignIn": true,
+          "canUnlink": false,
+          "prompted": false,
+          "alertType": "None"
+        }
+      ],
+      "grantTypes": [
+        "authorization_code",
+        "password"
+      ],
+      "redirectUris": ["${APP_CALLBACK_URL}"],
+      "expireInHours": 8,
+      "expireInHours": 168
+    }
+  ],
+  "users": [
+    {
+      "owner": "org-test",
+      "name": "${KEYCLOAK_USER_NAME}",
+      "type": "normal-user",
+      "password": "",
+      "displayName": "Test-User",
+      "score": 2000,
+      "isAdmin": false,
+      "isGlobalAdmin": false,
+      "isForbidden": false,
+      "isDeleted": false,
+      "signupApplication": "app-test"
+    },
+    {
+      "owner": "org-test",
+      "name": "${CASDOOR_APP_USER_NAME}",
+      "type": "normal-user",
+      "password": "${_CASDOOR_APP_USER_PASSWD}",
+      "displayName": "Test-User",
+      "score": 2000,
+      "isAdmin": false,
+      "isGlobalAdmin": false,
+      "isForbidden": false,
+      "isDeleted": false,
+      "signupApplication": "app-test"
+    }
+  ],
+  "providers": [
+    {
+      "owner": "org-test",
+      "name": "provider-keycloak-saml",
+      "displayName": "Keycloak SAML",
+      "category": "SAML",
+      "type": "Keycloak",
+      "method": "Normal",
+      "endpoint": "${SAML_ENDPOINT_URL}",
+      "metadata": "",
+      "idP": "${SAML_CERT}",
+      "issuerUrl": "${SAML_ISSUER_URL}",
+      "enableSignAuthnRequest": false
+    }
+  ],
+  "certs": [
+    {
+      "owner": "admin",
+      "name": "cert-test",
+      "displayName": "Test-Cert",
+      "scope": "JWT",
+      "type": "x509",
+      "cryptoAlgorithm": "RS256",
+      "bitSize": 4096,
+      "expireInYears": 20,
+      "certificate": "",
+      "privateKey": ""
+    }
+  ]
+}
