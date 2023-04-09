@@ -2,7 +2,7 @@
 
 You should adjust the file `env-template` to meet your needs (especially to avoid port collisions).
 
-1. Prerequisites: Make sure that you have `docker` and `docker-compose` installed. The tools `jq`, `openssl` and `xmllint` are also needed on the host system.
+1. Prerequisites: Make sure that you have Docker installed. The tools `curl`, `jq`, `openssl` and `xmllint` are also needed on the host system.
 
 2. Give permission to `deploy.sh`:
 
