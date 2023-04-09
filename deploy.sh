@@ -17,9 +17,9 @@ MYSQL_PASSWORD=$(openssl rand -hex 16)
 main() {
     echo "# This file was automatically generated and should not be edited" > $SCRIPT_DIR/.env
     cat $SCRIPT_DIR/env-template >> $SCRIPT_DIR/.env
-    echo "DOCKER_BRIDGE_IP=$DOCKER_BRIDGE_IP" >> $SCRIPT_DIR/.env
-    echo "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" >> $SCRIPT_DIR/.env
-    echo "MYSQL_PASSWORD=$MYSQL_PASSWORD" >> $SCRIPT_DIR/.env
+    echo "DOCKER_BRIDGE_IP=\"$DOCKER_BRIDGE_IP\"" >> $SCRIPT_DIR/.env
+    echo "MYSQL_ROOT_PASSWORD=\"$MYSQL_ROOT_PASSWORD\"" >> $SCRIPT_DIR/.env
+    echo "MYSQL_PASSWORD=\"$MYSQL_PASSWORD\"" >> $SCRIPT_DIR/.env
 
     source $SCRIPT_DIR/.env
     if [ "$?" -ne "0" ]; then
@@ -40,11 +40,11 @@ main() {
 
     # ------------------------------------------------------------------
 
-    docker-compose -f $SCRIPT_DIR/docker-compose.yml -p $APP_NAME down
+    docker compose -f $SCRIPT_DIR/docker-compose.yml -p $APP_NAME down
 
     # ------------------------------------------------------------------
 
-    docker-compose -f $SCRIPT_DIR/docker-compose.yml -p $APP_NAME up -d keycloak
+    docker compose -f $SCRIPT_DIR/docker-compose.yml -p $APP_NAME up -d keycloak
 
     # ------------------------------------------------------------------
 
@@ -52,11 +52,11 @@ main() {
 
     _KEYCLOAK_ADMIN_PASSWD=$(openssl rand -hex 3)
 
-    docker-compose -f $SCRIPT_DIR/docker-compose.yml -p $APP_NAME \
+    docker compose -f $SCRIPT_DIR/docker-compose.yml -p $APP_NAME \
         exec keycloak /opt/jboss/keycloak/bin/add-user-keycloak.sh \
         -u $KEYCLOAK_ADMIN_USER -p $_KEYCLOAK_ADMIN_PASSWD
 
-    docker-compose -f $SCRIPT_DIR/docker-compose.yml -p $APP_NAME \
+    docker compose -f $SCRIPT_DIR/docker-compose.yml -p $APP_NAME \
         restart keycloak
 
     # ------------------------------------------------------------------
@@ -229,7 +229,7 @@ main() {
 
     # ------------------------------------------------------------------
 
-    docker-compose -f $SCRIPT_DIR/docker-compose.yml -p $APP_NAME up -d db casdoor
+    docker compose -f $SCRIPT_DIR/docker-compose.yml -p $APP_NAME up -d db casdoor
 
     # ------------------------------------------------------------------
 
@@ -282,8 +282,8 @@ main() {
     envsubst < $SCRIPT_DIR/app/src/Setting.js-template > $SCRIPT_DIR/app/src/Setting.js
     envsubst < $SCRIPT_DIR/app/backend/server.js-template > $SCRIPT_DIR/app/backend/server.js
 
-    docker-compose -f $SCRIPT_DIR/docker-compose.yml -p $APP_NAME build --no-cache backend frontend
-    docker-compose -f $SCRIPT_DIR/docker-compose.yml -p $APP_NAME up -d backend frontend
+    docker compose -f $SCRIPT_DIR/docker-compose.yml -p $APP_NAME build --no-cache backend frontend
+    docker compose -f $SCRIPT_DIR/docker-compose.yml -p $APP_NAME up -d backend frontend
 
     # ------------------------------------------------------------------
 
@@ -302,7 +302,7 @@ main() {
     echo "Keycloak realm user name: $KEYCLOAK_USER_NAME"
     echo "Keycloak realm user password: $_KEYCLOAK_USER_PASSWD"
     echo ""
-    echo "Please use the following credentials for Keycloak admin console:"
+    echo "Keycloak admin console: $KEYCLOAK_URL"
     echo "Keycloak admin user name: $KEYCLOAK_ADMIN_USER"
     echo "Keycloak admin user password: $_KEYCLOAK_ADMIN_PASSWD"
 }
